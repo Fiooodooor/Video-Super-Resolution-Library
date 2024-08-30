@@ -63,6 +63,7 @@ RUN ldd ${PREFIX}/bin/ffmpeg | cut -d ' ' -f 3 | xargs -i cp {} . && \
         cp ${LIBIPP}/libippsn8.so.10.8 . && \
         cp ${LIBIPP}/libippsm7.so.10.8 . && \
         cp ${LIBIPP}/libippik0.so.10.8 . && \
+        cp ${LIBIPP}/libippil9.so.10.8 . && \
         mv ${PREFIX}/bin ${PREFIX}/usr/local/ && \
         LD_LIBRARY_PATH=${PREFIX}/usr/local/lib ${PREFIX}/usr/local/bin/ffmpeg -buildconf && \
         rm -rf ${PREFIX}/include/ ${PREFIX}/share/ ${PREFIX}/lib/
