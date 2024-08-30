@@ -15,7 +15,7 @@ index f87716611b..a3c22079a8 100755
 --- a/configure
 +++ b/configure
 @@ -3754,6 +3754,7 @@ transpose_opencl_filter_deps="opencl"
- transpose_vt_filter_deps="videotoolbox VTPixelRotationSessonCreate"
+ transpose_vt_filter_deps="videotoolbox VTPixelRotationSessionCreate"
  transpose_vulkan_filter_deps="vulkan spirv_compiler"
  unsharp_opencl_filter_deps="opencl"
 +raisr_opencl_filter_deps="opencl"
@@ -46,5 +46,5 @@ index 0dc81faaed..ef5ce4df9c 100644
  extern const AVFilter ff_vf_readeia608;
  extern const AVFilter ff_vf_readvitc;
  extern const AVFilter ff_vf_realtime;
--- 
+--
 2.34.1
