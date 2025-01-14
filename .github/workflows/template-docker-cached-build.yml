@@ -42,9 +42,9 @@ on:
         type: string
         default: './Dockerfile'
     secrets:
-      docker_registry_login:
+      git_docker_registry_login:
         required: false
-      docker_registry_passkey:
+      git_docker_registry_passkey:
         required: false
 
 env:
@@ -169,8 +169,8 @@ jobs:
         if: ${{ env.DOCKER_REGISTRY_LOGIN == 'true' }}
         with:
           registry: "${{ env.DOCKER_REGISTRY }}"
-          username: "${{ secrets.docker_registry_login   || env.GITHUB_ACTOR }}"
-          password: "${{ secrets.docker_registry_passkey || secrets.GITHUB_TOKEN }}"
+          username: "${{ secrets.git_docker_registry_login   || env.GITHUB_ACTOR }}"
+          password: "${{ secrets.git_docker_registry_passkey || secrets.GITHUB_TOKEN }}"
 
       - name: "${{ inputs.docker_image_name }}: Build and push image"
         uses: docker/build-push-action@1a162644f9a7e87d8f4b053101d1d9a712edc18c # v6.3.0
