@@ -44,7 +44,7 @@ jobs:
     - name: 'Install OS level dependencies'
       run: |
         set -exo pipefail && \
-        mkdir -p "${PREFIX}" "${BUILD_DIR}" && \
+        mkdir -p "${PREFIX}" "${BUILD_DIR}/ffmpeg" && \
         sudo apt-get update --fix-missing && \
         sudo apt-get full-upgrade -y && \
         sudo apt-get install --no-install-recommends -y \
@@ -84,12 +84,15 @@ jobs:
       working-directory: "${BUILD_DIR}/ffmpeg"
       run: |
         ./configure \
+          --disable-debug \
+          --disable-doc \
+          --enable-static \
           --enable-libipp \
-          --extra-cflags=-fopenmp \
-          --extra-ldflags=-fopenmp \
           --enable-gpl \
           --enable-libx264 \
           --enable-libx265 \
+          --extra-cflags='-fopenmp' \
+          --extra-ldflags='-fopenmp' \
           --extra-libs='-lraisr -lstdc++ -lippcore -lippvm -lipps -lippi -lm -lintlc -lsvml' \
           --enable-cross-compile \
           --prefix="${PREFIX}"  && \
