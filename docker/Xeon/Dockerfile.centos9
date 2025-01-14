@@ -44,14 +44,14 @@ RUN yum install -y \
 WORKDIR ${DL_PREFIX}/libx264
 RUN git clone https://github.com/mirror/x264 -b stable --depth 1 . && \
     ./configure --prefix="${PREFIX}" --libdir="${PREFIX}/lib" --enable-shared && \
-    make -j $(nproc) && \
+    make -j"$(nproc)" && \
     make install
 
 WORKDIR ${DL_PREFIX}/libx265/build/linux
 RUN curl -Lf https://github.com/videolan/x265/archive/3.4.tar.gz | \
       tar -zx --strip-components=1 -C "${DL_PREFIX}/libx265/" && \
     cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DHIGH_BIT_DEPTH=ON ../../source && \
-    make -j $(nproc) && \
+    make -j"$(nproc)" && \
     make install
 
 ENV IPPROOT="/opt/intel/oneapi/ipp/latest"
@@ -83,7 +83,7 @@ RUN ./configure \
       --enable-cross-compile \
       --prefix="${PREFIX}"  && \
     make clean && \
-    make -j $(nproc) && \
+    make -j"$(nproc)" && \
     make install && \
     rm -rf "${DL_PREFIX}/libx265" "${DL_PREFIX}/libx264"
 
