@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: read
+  security-events: write
+  packages: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -16,9 +18,6 @@ concurrency:
 
 jobs:
   flex-ubuntu-2204-build:
-    permissions:
-      security-events: write
-      contents: read
     name: "Build Flex Ubuntu 22.04 Docker Image"
     uses: ./.github/workflows/template-docker-cached-build.yml
     with:
@@ -26,9 +25,6 @@ jobs:
       docker_image_name: "raisr-flex-ubuntu-22.04"
 
   xeon-ubuntu-1804-build:
-    permissions:
-      security-events: write
-      contents: read
     name: "Build Xeon Ubuntu 18.04 Docker Image"
     uses: ./.github/workflows/template-docker-cached-build.yml
     with:
@@ -36,9 +32,6 @@ jobs:
       docker_image_name: "raisr-xeon-ubuntu-18.04"
 
   xeon-ubuntu-2004-build:
-    permissions:
-      security-events: write
-      contents: read
     name: "Build Xeon Ubuntu 20.04 Docker Image"
     uses: ./.github/workflows/template-docker-cached-build.yml
     with:
@@ -46,9 +39,6 @@ jobs:
       docker_image_name: "raisr-xeon-ubuntu-20.04"
       
   xeon-ubuntu-2204-build:
-    permissions:
-      security-events: write
-      contents: read
     name: "Build Xeon Ubuntu 22.04 Docker Image"
     uses: ./.github/workflows/template-docker-cached-build.yml
     with:
@@ -56,9 +46,6 @@ jobs:
       docker_image_name: "raisr-xeon-ubuntu-22.04"
 
   xeon-centos-stream9-build:
-    permissions:
-      security-events: write
-      contents: read
     name: "Build Xeon Centos Stream9 Docker Image"
     uses: ./.github/workflows/template-docker-cached-build.yml
     with:
@@ -66,9 +53,6 @@ jobs:
       docker_image_name: "raisr-xeon-centos-9"
 
   xeon-rockylinux-9-mini-build:
-    permissions:
-      security-events: write
-      contents: read
     name: "Build Xeon Rockylinux 9-mini Docker Image"
     uses: ./.github/workflows/template-docker-cached-build.yml
     with:
