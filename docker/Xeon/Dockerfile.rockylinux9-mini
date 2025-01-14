@@ -88,8 +88,8 @@ RUN ./configure \
     rm -rf "${DL_PREFIX}/libx265" "${DL_PREFIX}/libx264"
 
 WORKDIR ${PREFIX}/usr/local/lib
-RUN ldd ${PREFIX}/bin/ffmpeg | cut -d ' ' -f 3 | xargs -i cp {} . && \
-    mv "${PREFIX:?}/bin" "${PREFIX:?}/usr/local/" && \
+RUN ldd "${PREFIX}/bin/ffmpeg" | cut -d ' ' -f 3 | xargs -i cp {} . && \
+    mv "${PREFIX}/bin" "${PREFIX}/usr/local/" && \
     rm -rf "${PREFIX:?}/share" "${PREFIX:?}/include" "${PREFIX:?}/lib"
 
 ARG IMAGE_CACHE_REGISTRY
