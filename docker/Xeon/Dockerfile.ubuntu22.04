@@ -51,7 +51,7 @@ RUN ./configure \
        --extra-libs='-lraisr -lstdc++ -lippcore -lippvm -lipps -lippi -lm -lintlc -lsvml' \
        --enable-cross-compile  \
        --prefix="${PREFIX}"  && \
-    make clean && make -j $(nproc) && \
+    make clean && make -j"$(nproc)" && \
     make install
 
 ENV LIBIPP="/opt/intel/oneapi/ipp/latest/lib/intel64"
