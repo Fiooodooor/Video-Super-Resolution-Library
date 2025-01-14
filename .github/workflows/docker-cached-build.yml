@@ -24,7 +24,7 @@ jobs:
     with:
       docker_file_path:  "docker/Flex/Dockerfile.ubuntu22.04"
       docker_image_name: "raisr/raisr-flex"
-      docker_image_tag:  "ubuntu-22.04-{{ github.sha }}"
+      docker_image_tag:  "ubuntu-22.04-${{ github.sha }}"
 
   xeon-ubuntu-1804-build:
     permissions:
@@ -35,7 +35,7 @@ jobs:
     with:
       docker_file_path:  "docker/Xeon/Dockerfile.ubuntu18.04"
       docker_image_name: "raisr/raisr-xeon"
-      docker_image_tag:  "ubuntu-18.04-{{ github.sha }}"
+      docker_image_tag:  "ubuntu-18.04-${{ github.sha }}"
 
   xeon-ubuntu-2004-build:
     permissions:
@@ -46,7 +46,7 @@ jobs:
     with:
       docker_file_path:  "docker/Xeon/Dockerfile.ubuntu20.04"
       docker_image_name: "raisr/raisr-xeon"
-      docker_image_tag:  "ubuntu-20.04-{{ github.sha }}"
+      docker_image_tag:  "ubuntu-20.04-${{ github.sha }}"
       
   xeon-ubuntu-2204-build:
     permissions:
@@ -57,7 +57,7 @@ jobs:
     with:
       docker_file_path:  "docker/Xeon/Dockerfile.ubuntu22.04"
       docker_image_name: "raisr/raisr-xeon"
-      docker_image_tag:  "ubuntu-22.04-{{ github.sha }}"
+      docker_image_tag:  "ubuntu-22.04-${{ github.sha }}"
 
   xeon-centos-stream9-build:
     permissions:
@@ -68,7 +68,7 @@ jobs:
     with:
       docker_file_path:  "docker/Xeon/Dockerfile.centos9"
       docker_image_name: "raisr/raisr-xeon"
-      docker_image_tag:  "centos-9-{{ github.sha }}"
+      docker_image_tag:  "centos-9-${{ github.sha }}"
 
   xeon-rockylinux-9-mini-build:
     permissions:
@@ -79,4 +79,4 @@ jobs:
     with:
       docker_file_path:  "docker/Xeon/Dockerfile.rockylinux9-mini"
       docker_image_name: "raisr/raisr-xeon"
-      docker_image_tag:  "rockylinux-9-mini-{{ github.sha }}"
+      docker_image_tag:  "rockylinux-9-mini-${{ github.sha }}"
