@@ -12,3 +12,4 @@ trustedRegistries:
   - docker.io
   - gcr.io
   - ghcr.io
+  - quay.io
