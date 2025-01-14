@@ -205,7 +205,7 @@ RUN ffmpeg -h filter=raisr
 # install ngnix
 WORKDIR /opt/nginx
 RUN ./configure --with-http_ssl_module --add-module=../nginx-rtmp-module && \
-	  make -j $(nproc) && \
+	  make -j"$(nproc)" && \
     make install && \
     rm -rf nginx-rtmp-module nginx
 
