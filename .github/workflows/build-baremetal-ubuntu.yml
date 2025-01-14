@@ -60,7 +60,9 @@ jobs:
           build-essential \
           nasm \
           cmake \
-          diffutils
+          diffutils \
+          opencl-headers \
+          ocl-icd-opencl-dev
 
     - name: 'Install Intel OneAPI APT repository'
       run: |
@@ -91,6 +93,7 @@ jobs:
           --enable-gpl \
           --enable-libx264 \
           --enable-libx265 \
+          --enable-opencl \
           --extra-cflags='-fopenmp' \
           --extra-ldflags='-fopenmp' \
           --extra-libs='-lraisr -lstdc++ -lippcore -lippvm -lipps -lippi -lm -lintlc -lsvml' \
