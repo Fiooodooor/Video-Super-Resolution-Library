@@ -139,7 +139,7 @@ RUN ./configure \
 WORKDIR ${PREFIX}
 RUN mkdir -p "${PREFIX}/usr/lib" && \
     ldd "${PREFIX}/bin/ffmpeg" | cut -d ' ' -f 3 | xargs -i cp {} "${PREFIX}/usr/lib/" && \
-    LD_LIBRARY_PATH="/opt/intel/oneapi/ipp/latest/lib/intel64:/usr/local/lib:/usr/local/lib64" /opt/build/bin/ffmpeg -buildconf && \
+    LD_LIBRARY_PATH="/opt/intel/oneapi/ipp/latest/lib:${PREFIX}/usr/lib:/usr/local/lib:/usr/local/lib64" /opt/build/bin/ffmpeg -buildconf && \
     mv "${PREFIX}/bin" "${PREFIX}/usr/bin" && \
     mv "${PREFIX}/lib" "${PREFIX}/usr/local/"
 
