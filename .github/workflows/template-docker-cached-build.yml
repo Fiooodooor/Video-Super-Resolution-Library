@@ -18,7 +18,7 @@ on:
       docker_registry_login:
         required: false
         type: boolean
-        default: true
+        default: false
       docker_registry_push:
         required: false
         type: boolean
@@ -169,8 +169,8 @@ jobs:
         if: ${{ env.DOCKER_REGISTRY_LOGIN == 'true' }}
         with:
           registry: "${{ env.DOCKER_REGISTRY }}"
-          username: "${{ env.GITHUB_ACTOR }}"
-          password: "${{ secrets.GITHUB_TOKEN }}"
+          username: "${{ secrets.docker_registry_login   || env.GITHUB_ACTOR }}"
+          password: "${{ secrets.docker_registry_passkey || secrets.GITHUB_TOKEN }}"
 
       - name: "${{ inputs.docker_image_name }}: Build and push image"
         uses: docker/build-push-action@1a162644f9a7e87d8f4b053101d1d9a712edc18c # v6.3.0
