@@ -57,8 +57,10 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    timeout-minutes: 60
+    timeout-minutes: 90
     env:
+      BUILDKIT_STEP_LOG_MAX_SIZE: 50000000
+      BUILDKIT_STEP_LOG_MAX_SPEED: 10000000
       BUILD_TYPE: "${{ inputs.build_type }}"
       CONCURRENCY_GROUP: "${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}"
       DOCKER_REGISTRY: "${{ inputs.docker_registry }}"
@@ -70,16 +72,44 @@ jobs:
       DOCKER_IMAGE_TAG: "${{ inputs.docker_image_tag || github.sha }}"
       DOCKER_IMAGE_NAME: "${{ inputs.docker_image_name }}"
       DOCKER_FILE_PATH: "${{ inputs.docker_file_path }}"
+      DOCKER_TMPDIR: "/mnt/docker/docker-tmp"
     steps:
       - name: "${{ inputs.docker_image_name }}: Harden Runner"
         uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
         with:
           egress-policy: audit
 
-      - name: "${{ inputs.docker_image_name }}: Set up Docker Buildx"
+      - name: "${{ inputs.docker_image_name }}: Disable OS SWAP, create mnt points, show settings."
+        shell: bash
+        run: |
+          SWAP_FILE="$(sudo swapon --show=NAME | tail -n 1)"
+          sudo swapoff "${SWAP_FILE}"
+          sudo rm "${SWAP_FILE}"
+          sudo mkdir -p "/mnt/docker/docker-d" "/mnt/docker/docker-tmp"
+
+      - name: "${{ inputs.docker_image_name }}: Add data-root and JSON dockerd config. Reload daemons."
+        shell: bash
+        run: |
+          sudo chmod 666 /etc/docker/daemon.json
+          echo "$(sudo jq '. += {"data-root":"/mnt/docker/docker-d","log-driver":"json-file","log-format":"text","log-level":"info","log-opts":{"cache-disabled":"false","cache-max-file":"5","cache-max-size":"20m","max-file":"5","max-size":"10m"}}' /etc/docker/daemon.json)" > /etc/docker/daemon.json
+          sudo chmod 644 /etc/docker/daemon.json
+          sudo systemctl daemon-reload
+          sudo systemctl restart docker
+
+      - name: "${{ inputs.docker_image_name }}: Show applied configuration."
+        shell: bash
+        run: |
+          sudo free -h
+          sudo lsblk
+          sudo df -h
+          sudo cat "/etc/docker/daemon.json"
+
+      - name: "${{ inputs.docker_image_name }}: Set up Docker Buildx and Toolkit"
         uses: docker/setup-buildx-action@4fd812986e6c8c2a69e18311145f9371337f27d4 # v3.4.0
         with:
-          buildkitd-flags: --debug
+          buildkitd-flags: "--debug --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host"
+          platforms: "${{ env.DOCKER_PLATFORMS }}"
+          driver-opts: "memory=14Gib,memory-swap=25Gib,env.BUILDKIT_STEP_LOG_MAX_SIZE=${{ BUILDKIT_STEP_LOG_MAX_SIZE }},env.BUILDKIT_STEP_LOG_MAX_SPEED=${{ BUILDKIT_STEP_LOG_MAX_SPEED }}"
 
       - name: "${{ inputs.docker_image_name }}: Checkout repository"
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
