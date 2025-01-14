@@ -72,7 +72,7 @@ jobs:
       security-events: write
     timeout-minutes: 15
     steps:
-      - name: "${{ inputs.docker_image_name }} scan: Harden Runner"
+      - name: "${{ inputs.docker_image_name }} scan: Harden Runner."
         uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
         with:
           egress-policy: audit
@@ -80,7 +80,7 @@ jobs:
       - name: "${{ inputs.docker_image_name }} scan: Checkout repository"
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
-      - name: "${{ inputs.docker_image_name }} scan: Scanner Hadolint Dockerfile scan sarif format"
+      - name: "${{ inputs.docker_image_name }} scan: Scanner Hadolint Dockerfile scan sarif format."
         uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
         with:
           dockerfile: "${{ env.DOCKER_FILE_PATH }}"
@@ -90,10 +90,16 @@ jobs:
           no-fail: true
           failure-threshold: info
 
-      - name: "${{ inputs.docker_image_name }} scan: Scanner Hadolint upload results to Security tab"
+      - name: "${{ inputs.docker_image_name }} scan: Scanner Hadolint upload results to Security tab."
         uses: github/codeql-action/upload-sarif@2e230e8fe0ad3a14a340ad0815ddb96d599d2aff # v3.25.8
         with:
           sarif_file: "hadolint-${{ env.CONCURRENCY_GROUP }}-${{ env.DOCKER_IMAGE_NAME }}-${{ env.DOCKER_IMAGE_TAG }}.sarif"
+
+      - name: "${{ inputs.docker_image_name }} scan: Scanner Hadolint upload results as an artifact."
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: "hadolint-${{ env.DOCKER_IMAGE_NAME }}-${{ env.DOCKER_IMAGE_TAG }}"
+          path: "hadolint-${{ env.CONCURRENCY_GROUP }}-${{ env.DOCKER_IMAGE_NAME }}-${{ env.DOCKER_IMAGE_TAG }}.sarif"
 
       - name: "${{ inputs.docker_image_name }}: Scanner Hadolint Dockerfile scan tty output"
         if: always()
@@ -105,6 +111,7 @@ jobs:
           failure-threshold: warning
 
   build-docker-image:
+    needs: hadolint-scan-dockerfile
     name: "${{ inputs.docker_image_name }}: Perform build of Dockerfile."
     runs-on: ubuntu-22.04
     permissions:
@@ -188,3 +195,9 @@ jobs:
         uses: github/codeql-action/upload-sarif@2e230e8fe0ad3a14a340ad0815ddb96d599d2aff # v3.25.8
         with:
           sarif_file: "${{ env.CONCURRENCY_GROUP }}-${{ env.DOCKER_IMAGE_NAME }}-${{ env.DOCKER_IMAGE_TAG }}.sarif"
+
+      - name: "${{ inputs.docker_image_name }}: Scanner Trivy upload results as an artifact."
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: "trivy-${{ env.DOCKER_IMAGE_NAME }}-${{ env.DOCKER_IMAGE_TAG }}"
+          path: "${{ env.CONCURRENCY_GROUP }}-${{ env.DOCKER_IMAGE_NAME }}-${{ env.DOCKER_IMAGE_TAG }}.sarif"
